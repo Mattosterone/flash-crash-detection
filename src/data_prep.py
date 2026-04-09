@@ -7,6 +7,7 @@ Provides:
     compute_eda_stats   : summary statistics, ADF test, kurtosis/skewness
 """
 
+import gc
 from pathlib import Path
 from typing import Any
 
@@ -56,7 +57,20 @@ def load_raw_data(path: Path = config.RAW_DATA_FILE) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(f"Raw data file not found: {path}")
 
-    logger.info("Loading raw data from %s", path)
+    if config.LIGHTWEIGHT_MODE:
+        # Count total rows (excluding header — CSV has no header so all rows are data)
+        total_rows = sum(1 for _ in open(path, "r"))
+        skip_rows = max(0, total_rows - config.SAMPLE_ROWS)
+        logger.info(
+            "LIGHTWEIGHT MODE: using last %d of %d rows (skipping first %d)",
+            config.SAMPLE_ROWS,
+            total_rows,
+            skip_rows,
+        )
+        skiprows = range(1, skip_rows + 1) if skip_rows > 0 else None
+    else:
+        logger.info("Loading raw data from %s", path)
+        skiprows = None
 
     df = pd.read_csv(
         path,
@@ -71,10 +85,12 @@ def load_raw_data(path: Path = config.RAW_DATA_FILE) -> pd.DataFrame:
             "volume": np.float64,
             "trade": np.float64,
         },
+        skiprows=skiprows,
     )
 
     # Drop trade/flag column
     df.drop(columns=["trade"], inplace=True)
+    gc.collect()
 
     # Convert unix timestamp (seconds) to DatetimeIndex (UTC)
     df.index = pd.to_datetime(df["unix_time"], unit="s", utc=True)
@@ -86,6 +102,12 @@ def load_raw_data(path: Path = config.RAW_DATA_FILE) -> pd.DataFrame:
 
     # Compute log return: log(close_t / close_{t-1})
     df["log_return"] = np.log(df["close"] / df["close"].shift(1))
+
+    # Convert float64 → float32 to halve memory usage
+    if config.USE_FLOAT32:
+        float_cols = df.select_dtypes(include="float64").columns
+        df[float_cols] = df[float_cols].astype(np.float32)
+        logger.info("USE_FLOAT32: converted %d columns to float32", len(float_cols))
 
     logger.info(
         "Loaded %d bars from %s to %s",

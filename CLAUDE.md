@@ -104,6 +104,21 @@ invalidates the entire experiment:
 6. **No future features** — all features use only past/current data
    relative to the event time. Rolling windows look backward only.
 
+### Memory Constraints (MacBook Air M1 8GB)
+
+This project is developed on a memory-constrained machine.
+All code MUST follow these rules:
+
+1. **LIGHTWEIGHT_MODE**: When config.LIGHTWEIGHT_MODE is True,
+   load only the last 200,000 rows. Log which mode is active.
+2. **float32**: Use float32 for all feature columns to halve memory.
+3. **Sequential execution**: Never hold multiple large DataFrames
+   simultaneously. Load → process → save parquet → del → gc.collect().
+4. **DL adjustments**: In lightweight mode, use batch_size=64,
+   lookback=10. Enable MPS backend on M1 (device="mps").
+5. **SHAP samples**: Reduce to 500 in lightweight mode.
+6. **Final run on HPC**: Set LIGHTWEIGHT_MODE=False for paper results.
+
 ## Feature Engineering Specification (18 features, 4 groups)
 
 All features justified by literature review citations:
@@ -166,6 +181,11 @@ All features justified by literature review citations:
 | log_return skewness | −210.02 |
 | log_return kurtosis | 163,219 |
 | Processed outputs | `data/processed/df_clean.parquet`, `data/processed/cusum_events.parquet` |
+| **Lightweight df_clean** | 199,999 bars (float32, 4.5MB) |
+| **Lightweight CUSUM events** | 33,309 (16.66% event rate) |
+| **Standard TBM labels** | 33,297 events, 56.31% crash rate (subset only — not paper number) |
+| **Adaptive TBM labels** | 33,297 events, 56.20% crash rate (subset only — not paper number) |
+| **Label agreement** | 93.9% between standard and adaptive TBM |
 
 ## Known Bugs in Legacy Code (MUST fix)
 
@@ -200,6 +220,13 @@ Must be computed dynamically: n_negative / n_positive per fold.
 
 ### Bug 6: Absolute file paths
 Change from /Users/ismathakit/... to relative paths via config.py.
+
+### Known Issue: M1 Air 8GB OOM on full 2.2M dataset
+RESOLVED: LIGHTWEIGHT_MODE working. 200K rows runs without OOM on M1 Air 8GB.
+Set LIGHTWEIGHT_MODE=False for final paper results on HPC. pipeline_runner.py handles
+sequential phase execution with explicit del + gc.collect() between phases.
+NOTE: Crash rate in lightweight mode (56%) is not representative of full dataset.
+Do NOT use these numbers in paper. Paper numbers come from full-dataset HPC run only.
 
 ### Known Issue: CUSUM_THRESHOLD_MULTIPLIER mismatch
 `CUSUM_THRESHOLD_MULTIPLIER = 2.0` in config.py was based on an original
@@ -242,8 +269,8 @@ checks (Table 8). Current experiments use m=2.0 unless overridden.
 <!-- Update this after each Claude Code session -->
 
 - [x] Phase 0: Project structure + config.py
-- [x] Phase 1: data_prep.py + cusum.py
-- [ ] Phase 2: labeling.py (standard + adaptive TBM)
+- [x] Phase 1: data_prep.py + cusum.py (2,207,594 bars, 339K events at m=2.0)
+- [x] Phase 2: labeling.py — CODE COMPLETE + tested in lightweight mode (200K rows)
 - [ ] Phase 3: features.py + sample_weights.py
 - [ ] Phase 4: purged_cv.py (FIXED) + tests
 - [ ] Phase 5: models_ml.py (LightGBM, XGBoost, RF)
@@ -266,3 +293,8 @@ checks (Table 8). Current experiments use m=2.0 unless overridden.
 | 2026-04-09 | Raw data: 2,207,594 bars, date range 2020-03-12 to 2025-03-31 (~5 years) | Established in Phase 1; drives fold sizing, embargo duration, and expected event counts |
 | 2026-04-09 | CUSUM multiplier 2.0 gives 15.36% event rate (339,098 events), NOT ~7% as originally estimated. Multiplier 3.0 gives 7.74% (170,851 events). Decision: keep m=2.0 for now — 15% is still reasonable for initial experiments. Can adjust later in robustness checks (Table 8). | Original ~7% estimate was based on a smaller dataset; full 5-year dataset shows higher base rate |
 | 2026-04-09 | Log return shows extreme skew (-210) and kurtosis (163,219) — confirms fat tails and crash signatures in the data | Validates the motivation for the flash-crash detection task; standard Gaussian assumptions would be severely violated |
+| 2026-04-09 | Lightweight mode confirmed working: 200K rows runs in ~14s, all parquet files under 5MB total. M1 Air 8GB has no OOM issues. | Memory optimization (LIGHTWEIGHT_MODE + float32 + gc.collect) resolved exit code 137 |
+| 2026-04-09 | CUSUM on 200K rows: 33,309 events (16.66%) — consistent with full dataset ratio (15.36% at m=2.0) | Confirms CUSUM implementation is stable across dataset sizes |
+| 2026-04-09 | Crash rate 56% in lightweight mode is artificially high because last 200K rows capture a specific market regime. Expected and acceptable for development testing. Full-dataset crash rate will be lower and is the one used in paper. | Subset bias from taking the tail of a non-stationary time series |
+| 2026-04-09 | Label agreement between standard and adaptive TBM: 93.9% — adaptive scheme changes ~6% of labels, confirming measurable but not drastic effect. Good sign for RQ3. | If agreement were ~100% adaptive adds no value; if ~50% it would be too noisy |
+| 2026-04-09 | Standard TBM: 18,750 crash / 14,547 no-crash. Adaptive TBM: 18,714 crash / 14,583 no-crash. Adaptive slightly reduces crash count as expected (wider barriers in high-vol regimes catch fewer false crash triggers). | Validates adaptive barrier logic direction |

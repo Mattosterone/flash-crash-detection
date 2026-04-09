@@ -10,6 +10,7 @@ Reference: López de Prado (2018), Advances in Financial Machine Learning,
            Chapter 2 — The CUSUM Filter.
 """
 
+import gc
 import logging
 from typing import Union
 
@@ -127,6 +128,9 @@ def cusum_filter(
         valid_mask.sum(),
         100.0 * len(event_idx) / valid_mask.sum() if valid_mask.sum() else 0.0,
     )
+    # Free temporary accumulator list
+    del events
+    gc.collect()
     return event_idx
 
 
