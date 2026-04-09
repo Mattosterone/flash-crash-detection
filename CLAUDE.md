@@ -272,7 +272,7 @@ checks (Table 8). Current experiments use m=2.0 unless overridden.
 - [x] Phase 1: data_prep.py + cusum.py (2,207,594 bars, 339K events at m=2.0)
 - [x] Phase 2: labeling.py — CODE COMPLETE + tested in lightweight mode (200K rows)
 - [x] Phase 3: features.py — CODE COMPLETE + tested in lightweight mode (33,297 events, 18/18 features, 0 NaN/inf)
-- [ ] Phase 4: purged_cv.py (FIXED) + tests
+- [x] Phase 4: purged_cv.py — CODE COMPLETE + 21/21 unit tests pass (all 3 legacy bugs fixed; overlap=0 verified on real data; embargo=1d 10h time-based)
 - [ ] Phase 5: models_ml.py (LightGBM, XGBoost, RF)
 - [ ] Phase 6: models_dl.py (RNN, LSTM, GRU)
 - [ ] Phase 7: evaluation.py + comparison experiments
