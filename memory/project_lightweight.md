@@ -1,6 +1,6 @@
 ---
 name: Lightweight mode and pipeline status
-description: M1 8GB OOM issue resolved with LIGHTWEIGHT_MODE; Phase 2 labeling complete on 200K-row subset
+description: M1 8GB OOM resolved; Phases 1-6 complete through DL models (RNN/LSTM/GRU)
 type: project
 ---
 
@@ -21,6 +21,13 @@ Full 2.2M row dataset causes exit code 137 (OOM) on MacBook Air M1 8GB.
 - Label agreement between schemes: 93.9%
 - All outputs saved to data/processed/ (~6.7MB total)
 
+**Phase 6 complete (2026-04-09): src/models_dl.py**
+- SequenceDataset with valid_indices fold-boundary enforcement
+- CrashDetector (RNN/LSTM/GRU, batch_first, dropout, sigmoid output)
+- In LIGHTWEIGHT_MODE, effective lookback = 10 (vs 20 full mode)
+- Per-fold: scale→split train/val (80/20 temporal)→BCE pos_weight→Adam+ReduceLROnPlateau→early stopping→threshold opt on train
+- 2-fold integration test results (lightweight): LSTM PR-AUC=0.627±0.002, ~40-70s/fold on MPS
+
 **Why:** LIGHTWEIGHT_MODE=False needed for final paper results on HPC. Use pipeline_runner.py as the entry point.
 
-**How to apply:** Always check config.LIGHTWEIGHT_MODE before suggesting full-data runs. When results look off (e.g. 56% crash rate is high), note it may be a subset artifact — full dataset had 15.36% event rate but crash rate within events was not yet computed.
+**How to apply:** Always check config.LIGHTWEIGHT_MODE before suggesting full-data runs. When results look off (e.g. 56% crash rate is high), note it may be a subset artifact. For Phase 6 (DL), run `python -m src.models_dl` which auto-detects MPS and merges with ML results into table3_main_performance.csv.
