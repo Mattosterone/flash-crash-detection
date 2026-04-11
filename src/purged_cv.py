@@ -240,6 +240,26 @@ class PurgedEmbargoKFold:
 
             yield final_train, test_idx
 
+    def get_n_splits(
+        self,
+        X: Optional[pd.DataFrame] = None,
+        y: Optional[pd.Series] = None,
+        groups: Optional[pd.Series] = None,
+    ) -> int:
+        """Return the number of splits (required by sklearn CV interface).
+
+        Parameters
+        ----------
+        X, y, groups : ignored
+            Present for sklearn API compatibility.
+
+        Returns
+        -------
+        int
+            ``self.n_splits``
+        """
+        return self.n_splits
+
     def get_split_info(self, X: pd.DataFrame) -> pd.DataFrame:
         """Return a per-fold summary DataFrame.
 

@@ -23,3 +23,6 @@ results/
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
+
+# Project-internal instructions (not for public repo)
+CLAUDE.md

@@ -227,6 +227,38 @@ THRESHOLD_SEARCH_GRID: int = 100        # number of threshold candidates [0,1]
 # Note: NEVER use hardcoded threshold 0.4658 (Bug #4 in CLAUDE.md)
 
 # ======================================================================
+# HYPERPARAMETER TUNING (RandomizedSearchCV)
+# ======================================================================
+TUNING_N_ITER: int = 20               # number of random parameter settings sampled
+TUNING_SCORING: str = "average_precision"  # optimize PR-AUC during tuning
+
+ML_TUNING_SPACE: dict = {
+    "lgbm": {
+        "n_estimators": [200, 300, 500],
+        "learning_rate": [0.01, 0.05, 0.1],
+        "max_depth": [4, 6, 8],
+        "num_leaves": [15, 31, 63],
+        "min_child_samples": [10, 20, 50],
+        "subsample": [0.6, 0.8, 1.0],
+        "colsample_bytree": [0.6, 0.8, 1.0],
+    },
+    "xgboost": {
+        "n_estimators": [200, 300, 500],
+        "learning_rate": [0.01, 0.05, 0.1],
+        "max_depth": [4, 6, 8],
+        "min_child_weight": [1, 3, 5],
+        "subsample": [0.6, 0.8, 1.0],
+        "colsample_bytree": [0.6, 0.8, 1.0],
+    },
+    "rf": {
+        "n_estimators": [200, 300, 500],
+        "max_depth": [6, 10, 15, None],
+        "min_samples_leaf": [1, 5, 10],
+        "max_features": ["sqrt", "log2", 0.5],
+    },
+}
+
+# ======================================================================
 # ROBUSTNESS CHECKS (Table 8)
 # ======================================================================
 ROBUSTNESS_HORIZONS: list[int] = [30, 60, 90]          # alternative TBM horizons (bars)
