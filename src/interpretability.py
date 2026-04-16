@@ -11,13 +11,13 @@ importance reporting in Table 6.
 
 Public API
 ----------
-shap_analysis(model, X, n_samples, n_bootstrap) → dict
+shap_analysis(model, X, n_samples, n_bootstrap) -> dict
     SHAP values + bootstrapped feature importance with 95% CI.
 
-integrated_gradients_analysis(model, X_sequences, baseline, n_steps) → dict
+integrated_gradients_analysis(model, X_sequences, baseline, n_steps) -> dict
     IG attributions aggregated to per-feature and per-timestep importance.
 
-compare_feature_rankings(ml_importance, dl_importance, top_k) → pd.DataFrame
+compare_feature_rankings(ml_importance, dl_importance, top_k) -> pd.DataFrame
     Merge ML and DL importance rankings into Table 6.
 
 run_interpretability_analysis(X, y, t1)
@@ -123,8 +123,8 @@ def shap_analysis(
     shap_values = explainer.shap_values(X_sample)
 
     # Normalise output shape to (n_samples, n_features):
-    #   - list of two arrays [neg, pos]  → take index 1 (crash class)
-    #   - 3D ndarray (n, f, 2)           → take [:, :, 1]
+    #   - list of two arrays [neg, pos]  -> take index 1 (crash class)
+    #   - 3D ndarray (n, f, 2)           -> take [:, :, 1]
     if isinstance(shap_values, list):
         shap_values = shap_values[1]
     elif isinstance(shap_values, np.ndarray) and shap_values.ndim == 3:
@@ -185,9 +185,9 @@ def integrated_gradients_analysis(
 
     Aggregation:
         - ``feature_importance``: mean |attribution| averaged over all
-          sequences AND over the time dimension → one score per feature.
+          sequences AND over the time dimension -> one score per feature.
         - ``temporal_importance``: mean |attribution| averaged over
-          sequences AND features → one score per timestep in the lookback.
+          sequences AND features -> one score per timestep in the lookback.
 
     Parameters
     ----------
@@ -428,7 +428,7 @@ def plot_shap_summary(
     plt.tight_layout()
     plt.savefig(save_path, dpi=config.FIGURE_DPI, bbox_inches="tight")
     plt.close("all")
-    logger.info("Figure 7 (SHAP beeswarm) saved → %s", save_path)
+    logger.info("Figure 7 (SHAP beeswarm) saved -> %s", save_path)
 
 
 # ======================================================================
@@ -511,7 +511,7 @@ def plot_ig_summary(
     plt.tight_layout()
     plt.savefig(save_path, dpi=config.FIGURE_DPI, bbox_inches="tight")
     plt.close("all")
-    logger.info("Figure 8 (IG summary) saved → %s", save_path)
+    logger.info("Figure 8 (IG summary) saved -> %s", save_path)
 
 
 # ======================================================================
@@ -597,7 +597,7 @@ def plot_local_explanation(
     plt.tight_layout()
     plt.savefig(save_path, dpi=config.FIGURE_DPI, bbox_inches="tight")
     plt.close("all")
-    logger.info("Figure 9 (local explanation) saved → %s", save_path)
+    logger.info("Figure 9 (local explanation) saved -> %s", save_path)
 
 
 # ======================================================================
@@ -660,7 +660,7 @@ def _load_best_dl_model(model_name: str) -> "CrashDetector":
     with open(pkl_path, "rb") as f:
         state_dict = pickle.load(f)
 
-    rnn_type = model_name.upper()   # "rnn" → "RNN", etc.
+    rnn_type = model_name.upper()   # "rnn" -> "RNN", etc.
     model = CrashDetector(
         input_size=config.N_FEATURES,
         hidden_size=config.DL_HIDDEN_SIZE,
@@ -744,10 +744,10 @@ def run_interpretability_analysis(
         1. Scale X using a StandardScaler fit on a representative training
            portion (last N events, excluding the final fold).
         2. Load best ML model (highest PR-AUC across all ML models).
-        3. Run SHAP analysis → Figure 7 + local explanation → Figure 9.
+        3. Run SHAP analysis -> Figure 7 + local explanation -> Figure 9.
         4. Load best DL model (highest PR-AUC across all DL models).
-        5. Run IG analysis → Figure 8.
-        6. Compare rankings → Table 6.
+        5. Run IG analysis -> Figure 8.
+        6. Compare rankings -> Table 6.
 
     Parameters
     ----------
@@ -780,7 +780,7 @@ def run_interpretability_analysis(
 
     # SHAP sample size
     shap_n = (
-        config.SHAP_BACKGROUND_SAMPLES * 5   # 500 in lightweight → use background * 5
+        config.SHAP_BACKGROUND_SAMPLES * 5   # 500 in lightweight -> use background * 5
         if config.LIGHTWEIGHT_MODE
         else 2000
     )
@@ -844,17 +844,17 @@ def run_interpretability_analysis(
     )
     table6_path = config.TABLES_DIR / "table6_feature_rankings.csv"
     table6.to_csv(table6_path, index=False)
-    logger.info("Table 6 saved → %s", table6_path)
+    logger.info("Table 6 saved -> %s", table6_path)
     logger.info("\n%s", table6.to_string())
 
     # ── Step 6: Save full importance tables ───────────────────────────────
     shap_imp_path = config.TABLES_DIR / "shap_feature_importance.csv"
     shap_result["feature_importance"].to_csv(shap_imp_path, index=False)
-    logger.info("SHAP feature importance table saved → %s", shap_imp_path)
+    logger.info("SHAP feature importance table saved -> %s", shap_imp_path)
 
     ig_imp_path = config.TABLES_DIR / "ig_feature_importance.csv"
     ig_result["feature_importance"].to_csv(ig_imp_path, index=False)
-    logger.info("IG feature importance table saved → %s", ig_imp_path)
+    logger.info("IG feature importance table saved -> %s", ig_imp_path)
 
     logger.info("=== Phase 8 interpretability analysis complete ===")
 

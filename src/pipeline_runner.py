@@ -52,7 +52,7 @@ def run_phase_a() -> None:
 
 
 def run_phase_b() -> None:
-    """Phase B: CUSUM event filter → cusum_events.parquet."""
+    """Phase B: CUSUM event filter -> cusum_events.parquet."""
     import pandas as pd
     from src.cusum import compute_ewm_volatility, cusum_filter
 
@@ -78,7 +78,7 @@ def run_phase_b() -> None:
 
 
 def run_phase_c() -> None:
-    """Phase C: Triple Barrier labeling (standard + adaptive) → parquet."""
+    """Phase C: Triple Barrier labeling (standard + adaptive) -> parquet."""
     from src.cusum import compute_ewm_volatility
     from src.labeling import apply_standard_tbm, apply_adaptive_tbm, compare_labeling_schemes
     from src.sample_weights import compute_sample_weights

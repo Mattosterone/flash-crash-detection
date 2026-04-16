@@ -96,7 +96,7 @@ table1 = pd.DataFrame([
     {"Item": "LIGHTWEIGHT_MODE",          "Value": str(config.LIGHTWEIGHT_MODE)},
 ])
 table1.to_csv(TABS / "table1_dataset_summary.csv", index=False)
-print("  → table1_dataset_summary.csv")
+print("  -> table1_dataset_summary.csv")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # TABLE 2 — CLASS DISTRIBUTION PER CV FOLD
@@ -125,7 +125,7 @@ for fold_idx, (train_idx, test_idx) in enumerate(cv.split(X, y)):
 
 table2 = pd.DataFrame(rows)
 table2.to_csv(TABS / "table2_class_distribution.csv", index=False)
-print("  → table2_class_distribution.csv")
+print("  -> table2_class_distribution.csv")
 print(table2.to_string(index=False))
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -202,7 +202,7 @@ for dl_name in ["RNN", "LSTM", "GRU"]:
 if table6_rows:
     table6 = pd.concat(table6_rows, ignore_index=True)
     table6.to_csv(TABS / "table6_top_features.csv", index=False)
-    print("  → table6_top_features.csv")
+    print("  -> table6_top_features.csv")
 
 del table6_rows
 gc.collect()
@@ -357,7 +357,7 @@ fig.tight_layout()
 fig.savefig(FIGS / "figure2_pr_curves.pdf", dpi=config.FIGURE_DPI)
 fig.savefig(FIGS / "figure2_pr_curves.png", dpi=150)
 plt.close(fig)
-print("  → figure2_pr_curves.pdf")
+print("  -> figure2_pr_curves.pdf")
 
 del X_eval, X_train_scale, X_eval_sc, X_train_sc
 gc.collect()
@@ -430,7 +430,7 @@ fig.savefig(FIGS / "figure3_model_ranking.pdf", dpi=config.FIGURE_DPI,
             bbox_inches="tight")
 fig.savefig(FIGS / "figure3_model_ranking.png", dpi=150, bbox_inches="tight")
 plt.close(fig)
-print("  → figure3_model_ranking.pdf")
+print("  -> figure3_model_ranking.pdf")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # FIGURE 8 — INTEGRATED GRADIENTS (LSTM proxy via gradient × input)
@@ -486,7 +486,7 @@ try:
 
     # IG = (input - baseline) * average_gradient
     ig = ((X_tensor - baseline) * ig_accum / n_steps).detach().cpu().numpy()
-    # Aggregate: mean |IG| over samples, then mean over time steps → per feature
+    # Aggregate: mean |IG| over samples, then mean over time steps -> per feature
     ig_per_feature = np.abs(ig).mean(axis=(0, 1))  # shape: (n_features,)
 
     # Sort features by IG magnitude
@@ -510,7 +510,7 @@ try:
     fig.savefig(FIGS / "figure8_integrated_gradients.pdf", dpi=config.FIGURE_DPI)
     fig.savefig(FIGS / "figure8_integrated_gradients.png", dpi=150)
     plt.close(fig)
-    print("  → figure8_integrated_gradients.pdf")
+    print("  -> figure8_integrated_gradients.pdf")
 
     del X_ig_seq, X_tensor, ig_accum, ig, interp
     gc.collect()
@@ -530,7 +530,7 @@ except Exception as e:
     fig.savefig(FIGS / "figure8_integrated_gradients.pdf", dpi=config.FIGURE_DPI)
     fig.savefig(FIGS / "figure8_integrated_gradients.png", dpi=150)
     plt.close(fig)
-    print("  → figure8_integrated_gradients.pdf (placeholder)")
+    print("  -> figure8_integrated_gradients.pdf (placeholder)")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # COMPLETENESS CHECK
@@ -637,7 +637,7 @@ CV setup:
   Threshold     : Optimized per fold on training data (no global threshold)
 
 Robustness:
-  Best barrier  : Narrow (PT=1.0, SL=0.5) → PR-AUC=0.666, MCC=0.126
+  Best barrier  : Narrow (PT=1.0, SL=0.5) -> PR-AUC=0.666, MCC=0.126
   Embargo ±2×   : PR-AUC change < 0.001 (stable)
   Top-5 features: bb_width, log_return, volatility, ema_deviation, vwap_deviation
 """)
@@ -772,7 +772,7 @@ cells.append(code_cell([
     "print(f'  Recall        : {best[\"recall_mean\"]:.3f} ± {best[\"recall_std\"]:.3f}')\n",
     "print(f'  MCC           : {best[\"mcc_mean\"]:.3f} ± {best[\"mcc_std\"]:.3f}')\n",
     "print()\n",
-    "print(f'Robustness best : {narrow_rob[\"setting\"]} → PR-AUC={narrow_rob[\"pr_auc\"]:.3f}')\n",
+    "print(f'Robustness best : {narrow_rob[\"setting\"]} -> PR-AUC={narrow_rob[\"pr_auc\"]:.3f}')\n",
     "print('=' * 60)\n",
 ]))
 
@@ -818,6 +818,6 @@ nb = {
 nb_path = notebooks_dir / "10_final.ipynb"
 with open(nb_path, "w") as f:
     json.dump(nb, f, indent=1)
-print(f"  → {nb_path}")
+print(f"  -> {nb_path}")
 
 print("\nDone.")

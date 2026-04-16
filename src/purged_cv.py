@@ -9,9 +9,9 @@ Implements walk-forward K-Fold CV with three leakage safeguards:
 3. EMBARGO         — removes a TIME-BASED buffer zone AFTER the test fold
 
 Fixes three bugs present in legacy code (documented in CLAUDE.md):
-  Bug 1 (index-based embargo)  → embargo_td = total_span * embargo_pct
-  Bug 2 (remove before test)   → embargo removes only AFTER test end
-  Bug 3 (incomplete purge)     → full overlap check: t1 > test_start AND
+  Bug 1 (index-based embargo)  -> embargo_td = total_span * embargo_pct
+  Bug 2 (remove before test)   -> embargo removes only AFTER test end
+  Bug 3 (incomplete purge)     -> full overlap check: t1 > test_start AND
                                   event_time < test_end
 """
 
@@ -97,10 +97,10 @@ class PurgedEmbargoKFold:
             t1_tz = None
 
         if ref_tz is not None and t1_tz is None:
-            # X.index is tz-aware, t1 is tz-naive → localize t1 to same tz
+            # X.index is tz-aware, t1 is tz-naive -> localize t1 to same tz
             t1 = t1.dt.tz_localize(ref_tz)
         elif ref_tz is None and t1_tz is not None:
-            # X.index is tz-naive, t1 is tz-aware → strip tz from t1
+            # X.index is tz-naive, t1 is tz-aware -> strip tz from t1
             t1 = t1.dt.tz_localize(None)
         # If both tz-aware with different zones, convert t1 to ref_tz
         elif ref_tz is not None and t1_tz is not None and ref_tz != t1_tz:
@@ -228,7 +228,7 @@ class PurgedEmbargoKFold:
             final_train = train_candidates[keep_mask]
 
             logger.info(
-                "Fold %d/%d | test=[%s → %s] | "
+                "Fold %d/%d | test=[%s -> %s] | "
                 "train=%d  purged=%d  embargoed=%d",
                 fold_idx + 1, self.n_splits,
                 pd.Timestamp(test_start_ns, unit="ns", tz=X.index.tz).date(),

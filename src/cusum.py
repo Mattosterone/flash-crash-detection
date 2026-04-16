@@ -3,7 +3,7 @@ cusum.py — Module 2: CUSUM-based event filter for irregularly spaced events.
 
 Provides:
     compute_ewm_volatility    : exponentially weighted moving std of log returns
-    cusum_filter              : symmetric CUSUM filter → DatetimeIndex of events
+    cusum_filter              : symmetric CUSUM filter -> DatetimeIndex of events
     run_sensitivity_analysis  : event rate across threshold multipliers
 
 Reference: López de Prado (2018), Advances in Financial Machine Learning,
@@ -185,7 +185,7 @@ def run_sensitivity_analysis(
             }
         )
         logger.info(
-            "Sensitivity m=%.1f → %d events (%.2f%%)", m, len(events), event_rate
+            "Sensitivity m=%.1f -> %d events (%.2f%%)", m, len(events), event_rate
         )
 
     result = pd.DataFrame(rows).sort_values("multiplier").reset_index(drop=True)

@@ -116,9 +116,9 @@ def apply_standard_tbm(
         - Vertical              : event_time + max_horizon minutes
 
     The first barrier touched determines the label:
-        - Lower hit first  → bin=1 (crash)
-        - Upper hit first  → bin=0 (no-crash)
-        - Vertical barrier → bin=0 (timeout / no-crash)
+        - Lower hit first  -> bin=1 (crash)
+        - Upper hit first  -> bin=0 (no-crash)
+        - Vertical barrier -> bin=0 (timeout / no-crash)
 
     Events where event_time + max_horizon exceeds the last available bar
     or where volatility is NaN/zero are dropped.
@@ -158,7 +158,7 @@ def apply_standard_tbm(
     vol_aligned = volatility.reindex(close_idx)
     vol_vals = vol_aligned.values
 
-    # Build a lookup from timestamp → integer position (O(1) per event)
+    # Build a lookup from timestamp -> integer position (O(1) per event)
     ts_to_pos: dict[pd.Timestamp, int] = {ts: i for i, ts in enumerate(close_idx)}
 
     rows: list[dict] = []
@@ -225,7 +225,7 @@ def apply_standard_tbm(
     gc.collect()
 
     logger.info(
-        "Standard TBM: %d events → %d labeled | "
+        "Standard TBM: %d events -> %d labeled | "
         "skipped: horizon=%d, vol=%d, missing=%d",
         len(events),
         len(labels),
@@ -266,9 +266,9 @@ def apply_adaptive_tbm(
     Step 1 — Regime detection:
         Computes a rolling percentile rank of volatility over ``regime_window``
         bars (using only past data, no lookahead).  At each event:
-            rank > high_vol_pct/100 → HIGH   regime → multiply pt & sl by high_vol_factor
-            rank < low_vol_pct/100  → LOW    regime → multiply pt & sl by low_vol_factor
-            otherwise               → NORMAL regime → unchanged multipliers
+            rank > high_vol_pct/100 -> HIGH   regime -> multiply pt & sl by high_vol_factor
+            rank < low_vol_pct/100  -> LOW    regime -> multiply pt & sl by low_vol_factor
+            otherwise               -> NORMAL regime -> unchanged multipliers
 
     Step 2 — Barrier construction (same as standard TBM but with pt_adj / sl_adj).
 
@@ -417,7 +417,7 @@ def apply_adaptive_tbm(
     # Regime breakdown
     regime_counts = labels["regime"].value_counts()
     logger.info(
-        "Adaptive TBM: %d events → %d labeled | "
+        "Adaptive TBM: %d events -> %d labeled | "
         "skipped: horizon=%d, vol=%d, rank=%d, missing=%d",
         len(events),
         len(labels),

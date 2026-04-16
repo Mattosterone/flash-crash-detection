@@ -165,7 +165,7 @@ def save_result(
     df : pd.DataFrame or pd.Series
         Data to save.  Series is converted to a single-column DataFrame.
     name : str
-        File stem (without extension).  E.g. ``"events"`` → ``events.parquet``.
+        File stem (without extension).  E.g. ``"events"`` -> ``events.parquet``.
     subdir : Path, optional
         Sub-directory inside config.PROCESSED_DATA_DIR.
         If None, saves directly to PROCESSED_DATA_DIR.
@@ -184,7 +184,7 @@ def save_result(
 
     df.to_parquet(path, index=True)
     logger = logging.getLogger(__name__)
-    logger.info("Saved %s → %s  (shape=%s)", name, path, df.shape)
+    logger.info("Saved %s -> %s  (shape=%s)", name, path, df.shape)
     return path
 
 
@@ -197,7 +197,7 @@ def load_result(
     Parameters
     ----------
     name : str
-        File stem (without extension).  E.g. ``"events"`` → ``events.parquet``.
+        File stem (without extension).  E.g. ``"events"`` -> ``events.parquet``.
     subdir : Path, optional
         Sub-directory inside config.PROCESSED_DATA_DIR.
         If None, loads directly from PROCESSED_DATA_DIR.

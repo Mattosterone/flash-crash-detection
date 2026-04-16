@@ -10,7 +10,7 @@ from pathlib import Path
 # ======================================================================
 LIGHTWEIGHT_MODE: bool = True    # Set False when running on HPC
 SAMPLE_ROWS: int = 200_000       # Use last N rows in lightweight mode
-USE_FLOAT32: bool = True         # Convert float64 → float32 to halve memory
+USE_FLOAT32: bool = True         # Convert float64 -> float32 to halve memory
 
 # ======================================================================
 # PATHS

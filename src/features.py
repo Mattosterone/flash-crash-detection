@@ -174,7 +174,7 @@ def _compute_cs_spread(high: pd.Series, low: pd.Series) -> pd.Series:
     alpha = (np.sqrt(2.0 * beta) - np.sqrt(beta)) / k - np.sqrt(gamma / k)
 
     spread = 2.0 * (np.exp(alpha) - 1.0) / (1.0 + np.exp(alpha))
-    spread = spread.clip(lower=0.0)        # negative estimates are noise → 0
+    spread = spread.clip(lower=0.0)        # negative estimates are noise -> 0
     return spread.astype("float32")
 
 
@@ -241,7 +241,7 @@ def _compute_rsi(log_return: pd.Series, period: int = 14) -> pd.Series:
 def _compute_efficiency_ratio(close: pd.Series, window: int) -> pd.Series:
     """Fractal Efficiency Ratio: |net_change(w)| / sum(|bar_changes(w)|).
 
-    ER → 1 means directional (trending); ER → 0 means choppy (noisy).
+    ER -> 1 means directional (trending); ER -> 0 means choppy (noisy).
     """
     net_change = (close - close.shift(window)).abs().astype("float64")
     bar_changes = close.diff().abs().astype("float64")

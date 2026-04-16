@@ -24,7 +24,7 @@ SequenceDataset
     sequences, constrained by valid_indices.
 
 CrashDetector
-    Recurrent model: RNN/LSTM/GRU → Dropout → Linear → Sigmoid.
+    Recurrent model: RNN/LSTM/GRU -> Dropout -> Linear -> Sigmoid.
 
 create_dl_models(input_size)
     Build initial model configs for all three DL architectures.
@@ -130,11 +130,11 @@ class CrashDetector(nn.Module):
 
     Architecture:
         Input (batch, seq_len, n_features)
-          → RNN / LSTM / GRU (num_layers stacked, batch_first=True)
-          → last time-step hidden state
-          → Dropout
-          → Linear(hidden_size → 1)
-          → Sigmoid
+          -> RNN / LSTM / GRU (num_layers stacked, batch_first=True)
+          -> last time-step hidden state
+          -> Dropout
+          -> Linear(hidden_size -> 1)
+          -> Sigmoid
         Output (batch, 1) — crash probability in [0, 1].
 
     Parameters
@@ -914,7 +914,7 @@ def run_all_dl_models(
     table3_dl = _build_table3_dl(all_results)
     out_path = config.TABLES_DIR / "table3_dl_part.csv"
     table3_dl.to_csv(out_path)
-    logger.info("Table 3 DL part saved → %s", out_path)
+    logger.info("Table 3 DL part saved -> %s", out_path)
 
     return table3_dl
 
@@ -941,7 +941,7 @@ def _save_best_dl_model(result: dict[str, Any], model_name: str) -> None:
         pickle.dump(best_model.cpu().state_dict(), f)
 
     logger.info(
-        "Saved best %s model (fold %d, PR-AUC=%.4f) → %s",
+        "Saved best %s model (fold %d, PR-AUC=%.4f) -> %s",
         model_name, best_fold_idx + 1, fold_pr_aucs[best_fold_idx], pkl_path,
     )
 
@@ -952,7 +952,7 @@ def _build_table3_dl(all_results: dict[str, dict]) -> pd.DataFrame:
     Parameters
     ----------
     all_results : dict
-        Map of model_name → result dict from ``train_evaluate_dl``.
+        Map of model_name -> result dict from ``train_evaluate_dl``.
 
     Returns
     -------
@@ -1023,7 +1023,7 @@ if __name__ == "__main__":
     print(table3_dl.to_string())
     print("=" * 70)
 
-    # ── Merge with ML results → full Table 3 ─────────────────────────────
+    # ── Merge with ML results -> full Table 3 ─────────────────────────────
     ml_path = config.TABLES_DIR / "table3_ml_part.csv"
     if ml_path.exists():
         table3_ml = pd.read_csv(ml_path, index_col="model")
@@ -1037,11 +1037,11 @@ if __name__ == "__main__":
         print("=" * 70)
         print(table3_full.to_string())
         print("=" * 70)
-        print(f"\nSaved merged table → {full_path}")
+        print(f"\nSaved merged table -> {full_path}")
     else:
         logger.warning(
             "ML results not found at %s — run Phase 5 (models_ml.py) first "
             "to produce the full Table 3 merge.",
             ml_path,
         )
-        print(f"\nDL-only table saved → {config.TABLES_DIR / 'table3_dl_part.csv'}")
+        print(f"\nDL-only table saved -> {config.TABLES_DIR / 'table3_dl_part.csv'}")

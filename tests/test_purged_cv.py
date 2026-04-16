@@ -190,7 +190,7 @@ class TestEmbargoIsTimeBased:
         emb_short = info_short["embargo_duration"].iloc[0]
         emb_long = info_long["embargo_duration"].iloc[0]
 
-        # Long dataset has 2× the time span → 2× the embargo
+        # Long dataset has 2× the time span -> 2× the embargo
         ratio = emb_long / emb_short
         assert abs(ratio - 2.0) < 0.01, (
             f"Expected embargo to double with 2× time span, got ratio={ratio:.3f}. "
@@ -221,7 +221,7 @@ class TestEmbargoOnlyAfterTest:
     def test_no_before_test_events_embargoed(self) -> None:
         """Use zero-duration barriers so purging removes nothing.
         All pre-test events must then be in the training set."""
-        # t1 = event_time (zero-duration barrier → no purge overlap possible
+        # t1 = event_time (zero-duration barrier -> no purge overlap possible
         #   because t1_train == test_start is NOT strictly greater)
         n = 200
         X, y, _ = make_dataset(n_events=n)

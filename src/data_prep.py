@@ -2,7 +2,7 @@
 data_prep.py — Module 1: Raw data loading, cleaning, and EDA statistics.
 
 Provides:
-    load_raw_data       : parse EURUSD CSV → DatetimeIndex DataFrame
+    load_raw_data       : parse EURUSD CSV -> DatetimeIndex DataFrame
     clean_data          : remove duplicates, handle zero-volume bars
     compute_eda_stats   : summary statistics, ADF test, kurtosis/skewness
 """
@@ -103,7 +103,7 @@ def load_raw_data(path: Path = config.RAW_DATA_FILE) -> pd.DataFrame:
     # Compute log return: log(close_t / close_{t-1})
     df["log_return"] = np.log(df["close"] / df["close"].shift(1))
 
-    # Convert float64 → float32 to halve memory usage
+    # Convert float64 -> float32 to halve memory usage
     if config.USE_FLOAT32:
         float_cols = df.select_dtypes(include="float64").columns
         df[float_cols] = df[float_cols].astype(np.float32)
@@ -129,7 +129,7 @@ def clean_data(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
 
     Steps applied in order:
     1. Remove duplicate timestamps (keep first occurrence).
-    2. Remove zero-volume bars (no trading activity → unreliable OHLC).
+    2. Remove zero-volume bars (no trading activity -> unreliable OHLC).
     3. Remove rows where close price is NaN or zero.
     4. Recompute log_return after row removal to avoid erroneous gaps.
     5. Drop the first row (log_return is NaN after shift).
@@ -187,7 +187,7 @@ def clean_data(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
     )
 
     logger.info(
-        "Cleaning complete: %d → %d rows (%.4f%% removed)",
+        "Cleaning complete: %d -> %d rows (%.4f%% removed)",
         report["n_raw"],
         report["n_clean"],
         report["pct_removed"],

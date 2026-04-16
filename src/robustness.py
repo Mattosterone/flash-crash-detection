@@ -785,7 +785,7 @@ def build_figure10_sensitivity(table8: pd.DataFrame) -> None:
     for ext in ("pdf", "png"):
         out = config.FIGURES_DIR / f"figure10_sensitivity.{ext}"
         fig.savefig(out, dpi=config.FIGURE_DPI, bbox_inches="tight")
-        logger.info("Figure 10 saved → %s", out)
+        logger.info("Figure 10 saved -> %s", out)
 
     plt.close(fig)
 
@@ -806,7 +806,7 @@ def run_robustness_phase(
 
     Steps:
       1. Compile Table 7 (computational feasibility).
-      2. Run all 8 robustness settings → Table 8.
+      2. Run all 8 robustness settings -> Table 8.
       3. Build Figure 10 (sensitivity plot).
       4. Save Table 7 and Table 8 as CSV.
 
@@ -834,7 +834,7 @@ def run_robustness_phase(
     table7 = compile_table7_computational()
     t7_path = config.TABLES_DIR / "table7_computational.csv"
     table7.to_csv(t7_path, index=False)
-    logger.info("Table 7 saved → %s", t7_path)
+    logger.info("Table 7 saved -> %s", t7_path)
 
     # Print Table 7
     print("\n" + "=" * 70)
@@ -855,7 +855,7 @@ def run_robustness_phase(
     )
     t8_path = config.TABLES_DIR / "table8_robustness.csv"
     table8.to_csv(t8_path, index=False)
-    logger.info("Table 8 saved → %s", t8_path)
+    logger.info("Table 8 saved -> %s", t8_path)
 
     # Print Table 8
     print("\n" + "=" * 70)
@@ -883,10 +883,10 @@ def main() -> None:
     """Load pre-computed data and run Phase 9 robustness analysis.
 
     Loads:
-      - data/processed/X_y_adaptive.parquet  → X_base, y_base
-      - data/processed/labels_adaptive.parquet → t1_base
-      - data/processed/df_clean.parquet       → df_clean
-      - data/processed/cusum_events.parquet   → cusum_events
+      - data/processed/X_y_adaptive.parquet  -> X_base, y_base
+      - data/processed/labels_adaptive.parquet -> t1_base
+      - data/processed/df_clean.parquet       -> df_clean
+      - data/processed/cusum_events.parquet   -> cusum_events
 
     Recomputes sample weights (fast, deterministic).
     """

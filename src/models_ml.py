@@ -513,7 +513,7 @@ def run_all_ml_models(
 
     out_path = config.TABLES_DIR / "table3_ml_part.csv"
     table3.to_csv(out_path)
-    logger.info("Table 3 ML part saved → %s", out_path)
+    logger.info("Table 3 ML part saved -> %s", out_path)
 
     return table3
 
@@ -540,7 +540,7 @@ def _save_best_model(result: dict[str, Any], model_name: str) -> None:
         pickle.dump(best_model, f)
 
     logger.info(
-        "Saved best %s model (fold %d, PR-AUC=%.4f) → %s",
+        "Saved best %s model (fold %d, PR-AUC=%.4f) -> %s",
         model_name, best_fold_idx + 1, fold_pr_aucs[best_fold_idx], pkl_path,
     )
 
@@ -551,7 +551,7 @@ def _build_table3(all_results: dict[str, dict]) -> pd.DataFrame:
     Parameters
     ----------
     all_results : dict
-        Map of model_name → result dict from ``train_evaluate_ml``.
+        Map of model_name -> result dict from ``train_evaluate_ml``.
 
     Returns
     -------

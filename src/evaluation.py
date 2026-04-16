@@ -205,9 +205,9 @@ def format_table4(
     Parameters
     ----------
     adaptive_results : dict[str, dict]
-        model_key → result dict for adaptive-labeled training runs.
+        model_key -> result dict for adaptive-labeled training runs.
     standard_results : dict[str, dict]
-        model_key → result dict for standard-labeled training runs.
+        model_key -> result dict for standard-labeled training runs.
 
     Returns
     -------
@@ -247,9 +247,9 @@ def format_table5(
     Parameters
     ----------
     purged_results : dict[str, dict]
-        model_key → result dict from PurgedEmbargoKFold evaluation.
+        model_key -> result dict from PurgedEmbargoKFold evaluation.
     standard_cv_results : dict[str, dict]
-        model_key → result dict from standard (non-purged) KFold evaluation.
+        model_key -> result dict from standard (non-purged) KFold evaluation.
 
     Returns
     -------
@@ -518,7 +518,7 @@ def run_labeling_comparison(
     table4 = format_table4(adaptive_ml_results, standard_label_results)
     out_path = config.TABLES_DIR / "table4_labeling_comparison.csv"
     table4.to_csv(out_path)
-    logger.info("Table 4 saved → %s", out_path)
+    logger.info("Table 4 saved -> %s", out_path)
 
     # ── Figure 4: class distribution comparison ───────────────────────────
     fig4_path = _plot_class_distribution(y_adaptive, y_standard)
@@ -606,7 +606,7 @@ def run_leakage_comparison(
     table5 = format_table5(purged_ml_results, standard_kfold_results)
     out_path = config.TABLES_DIR / "table5_leakage_comparison.csv"
     table5.to_csv(out_path)
-    logger.info("Table 5 saved → %s", out_path)
+    logger.info("Table 5 saved -> %s", out_path)
 
     # ── Figure 6: leakage inflation visualization ─────────────────────────
     fig6_path = _plot_leakage_inflation(purged_ml_results, standard_kfold_results)
@@ -680,7 +680,7 @@ def _plot_class_distribution(
     out = config.FIGURES_DIR / f"figure4_class_distribution.{config.FIGURE_FORMAT}"
     fig.savefig(out, dpi=config.FIGURE_DPI, bbox_inches="tight")
     plt.close(fig)
-    logger.info("Figure 4 saved → %s", out)
+    logger.info("Figure 4 saved -> %s", out)
     return str(out)
 
 
@@ -735,7 +735,7 @@ def _plot_metric_difference(
     out = config.FIGURES_DIR / f"figure5_metric_difference.{config.FIGURE_FORMAT}"
     fig.savefig(out, dpi=config.FIGURE_DPI, bbox_inches="tight")
     plt.close(fig)
-    logger.info("Figure 5 saved → %s", out)
+    logger.info("Figure 5 saved -> %s", out)
     return str(out)
 
 
@@ -805,7 +805,7 @@ def _plot_leakage_inflation(
     out = config.FIGURES_DIR / f"figure6_leakage_inflation.{config.FIGURE_FORMAT}"
     fig.savefig(out, dpi=config.FIGURE_DPI, bbox_inches="tight")
     plt.close(fig)
-    logger.info("Figure 6 saved → %s", out)
+    logger.info("Figure 6 saved -> %s", out)
     return str(out)
 
 
@@ -931,11 +931,11 @@ if __name__ == "__main__":
     print("\n" + "=" * 70)
     print("OUTPUTS")
     print("=" * 70)
-    print(f"  Table 4 → {config.TABLES_DIR / 'table4_labeling_comparison.csv'}")
-    print(f"  Table 5 → {config.TABLES_DIR / 'table5_leakage_comparison.csv'}")
-    print(f"  Figure 4 → {fig4_path}")
-    print(f"  Figure 5 → {fig5_path}")
-    print(f"  Figure 6 → {fig6_path}")
+    print(f"  Table 4 -> {config.TABLES_DIR / 'table4_labeling_comparison.csv'}")
+    print(f"  Table 5 -> {config.TABLES_DIR / 'table5_leakage_comparison.csv'}")
+    print(f"  Figure 4 -> {fig4_path}")
+    print(f"  Figure 5 -> {fig5_path}")
+    print(f"  Figure 6 -> {fig6_path}")
 
     # Sanity check: warn if standard KFold is NOT better than purged CV
     print("\n" + "=" * 70)

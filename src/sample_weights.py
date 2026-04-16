@@ -7,7 +7,7 @@ Chapter 4 — Sample Weights.
 Each label horizon [event_start, t1] may overlap with other labels' horizons.
 A bar t has concurrency c(t) = number of labels whose horizon contains t.
 The uniqueness of a label e is the time-average of 1/c(t) over its horizon.
-Labels with fewer overlapping labels receive higher uniqueness → higher weight.
+Labels with fewer overlapping labels receive higher uniqueness -> higher weight.
 
 This corrects for the over-representation of information in highly overlapping
 label periods, which is a form of look-ahead-free variance reduction.
@@ -117,7 +117,7 @@ def compute_sample_weights(
                decay[e] ∝ exp(time_decay * (index_of_e / n_events - 1))
                (time_decay=0 means uniform; >0 downweights older events)
         4. weight[e] = avg_uniqueness[e] * decay[e]
-        5. Normalize: weight → weight / weight.sum() * n_events
+        5. Normalize: weight -> weight / weight.sum() * n_events
            (so the average weight is 1.0 and weights sum to n_events)
         6. Clip from below at min_weight.
 
