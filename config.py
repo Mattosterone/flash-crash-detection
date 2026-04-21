@@ -8,7 +8,7 @@ from pathlib import Path
 # ======================================================================
 # RUNTIME MODE — MEMORY CONSTRAINTS
 # ======================================================================
-LIGHTWEIGHT_MODE: bool = True    # Set False when running on HPC
+LIGHTWEIGHT_MODE: bool = False   # Set False when running on HPC
 SAMPLE_ROWS: int = 200_000       # Use last N rows in lightweight mode
 USE_FLOAT32: bool = True         # Convert float64 -> float32 to halve memory
 
@@ -46,7 +46,7 @@ FREQ: str = "1min"  # 1-minute bars
 # ======================================================================
 # CUSUM FILTER
 # ======================================================================
-CUSUM_THRESHOLD_MULTIPLIER: float = 2.0   # threshold = multiplier * rolling_std
+CUSUM_THRESHOLD_MULTIPLIER: float = 3.0   # threshold = multiplier * rolling_std
 CUSUM_LOOKBACK: int = 50                  # bars for rolling volatility estimate
 # Target ~7% event rate (from sensitivity analysis)
 CUSUM_MIN_RETURN: float = 0.0             # minimum |return| to trigger event
@@ -54,8 +54,8 @@ CUSUM_MIN_RETURN: float = 0.0             # minimum |return| to trigger event
 # ======================================================================
 # TRIPLE BARRIER METHOD — STANDARD
 # ======================================================================
-TBM_PROFIT_TAKING: float = 1.5           # PT multiplier × daily volatility
-TBM_STOP_LOSS: float = 1.0               # SL multiplier × daily volatility
+TBM_PROFIT_TAKING: float = 5.0           # PT multiplier × daily volatility
+TBM_STOP_LOSS: float = 5.0               # SL multiplier × daily volatility
 TBM_HORIZON_BARS: int = 60               # max holding period in bars (= 60 min)
 TBM_VOLATILITY_SPAN: int = 50            # EWM span for daily vol estimate
 # Label encoding: 1=crash(PT hit), 0=no-crash (SL or timeout)
@@ -259,8 +259,45 @@ ML_TUNING_SPACE: dict = {
 }
 
 # ======================================================================
+# LEAKAGE EXPERIMENT SETTINGS
+# ======================================================================
+LEAKAGE_EXPERIMENT_SETTINGS: dict = {
+    "baseline": {
+        "pt": 5.0, "sl": 5.0, "horizon": 60,
+        "description": "Wide symmetric barriers (paper baseline)"
+    },
+    "moderate": {
+        "pt": 3.0, "sl": 3.0, "horizon": 60,
+        "description": "Moderate symmetric barriers"
+    },
+    "narrow": {
+        "pt": 1.0, "sl": 1.0, "horizon": 60,
+        "description": "Narrow symmetric (short horizon)"
+    },
+    "original": {
+        "pt": 1.5, "sl": 1.0, "horizon": 60,
+        "description": "Original asymmetric (old paper setting)"
+    },
+    "max_overlap": {
+        "pt": 5.0, "sl": 5.0, "horizon": 240,
+        "description": "Wide barriers + 4-hour horizon (max overlap)"
+    },
+}
+
+# ======================================================================
 # ROBUSTNESS CHECKS (Table 8)
 # ======================================================================
+ROBUSTNESS_SETTINGS: dict = {
+    "baseline":           {"horizon": 60,  "pt": 5.0, "sl": 5.0, "embargo": 0.01, "features": "all"},
+    "alt_horizon_30":     {"horizon": 30,  "pt": 5.0, "sl": 5.0, "embargo": 0.01, "features": "all"},
+    "alt_horizon_120":    {"horizon": 120, "pt": 5.0, "sl": 5.0, "embargo": 0.01, "features": "all"},
+    "alt_barrier_narrow": {"horizon": 60,  "pt": 3.0, "sl": 3.0, "embargo": 0.01, "features": "all"},
+    "alt_barrier_wide":   {"horizon": 60,  "pt": 7.0, "sl": 7.0, "embargo": 0.01, "features": "all"},
+    "reduced_features":   {"horizon": 60,  "pt": 5.0, "sl": 5.0, "embargo": 0.01, "features": "top5"},
+    "alt_embargo_half":   {"horizon": 60,  "pt": 5.0, "sl": 5.0, "embargo": 0.005,"features": "all"},
+    "alt_embargo_double": {"horizon": 60,  "pt": 5.0, "sl": 5.0, "embargo": 0.02, "features": "all"},
+}
+
 ROBUSTNESS_HORIZONS: list[int] = [30, 60, 90]          # alternative TBM horizons (bars)
 ROBUSTNESS_PT_MULTIPLIERS: list[float] = [1.0, 1.5, 2.0]  # alternative PT barriers
 ROBUSTNESS_SL_MULTIPLIERS: list[float] = [0.75, 1.0, 1.5]  # alternative SL barriers

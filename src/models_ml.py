@@ -420,7 +420,7 @@ def _tune_model(
         cv=inner_cv,
         scoring=config.TUNING_SCORING,
         random_state=config.RANDOM_SEED,
-        n_jobs=1,           # keep memory usage low on M1 Air
+        n_jobs=-1,          # use all available cores on HPC
         refit=False,        # we rebuild the model ourselves with best params
     )
 

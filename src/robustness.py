@@ -76,8 +76,8 @@ ROBUSTNESS_SETTINGS: list[dict] = [
     {
         "name": "Baseline",
         "horizon": config.TBM_HORIZON_BARS,    # 60
-        "pt":      config.TBM_PROFIT_TAKING,   # 1.5
-        "sl":      config.TBM_STOP_LOSS,       # 1.0
+        "pt":      config.TBM_PROFIT_TAKING,   # 5.0
+        "sl":      config.TBM_STOP_LOSS,       # 5.0
         "embargo_pct": config.CV_PCT_EMBARGO,  # 0.01
         "feature_subset": "all",
         "relabel": False,   # use pre-computed adaptive labels
@@ -92,8 +92,8 @@ ROBUSTNESS_SETTINGS: list[dict] = [
         "relabel": True,
     },
     {
-        "name": "Horizon 90min",
-        "horizon": 90,
+        "name": "Horizon 120min",
+        "horizon": 120,
         "pt":      config.TBM_PROFIT_TAKING,
         "sl":      config.TBM_STOP_LOSS,
         "embargo_pct": config.CV_PCT_EMBARGO,
@@ -103,8 +103,8 @@ ROBUSTNESS_SETTINGS: list[dict] = [
     {
         "name": "Narrow Barriers",
         "horizon": config.TBM_HORIZON_BARS,
-        "pt":      1.0,
-        "sl":      0.5,
+        "pt":      3.0,
+        "sl":      3.0,
         "embargo_pct": config.CV_PCT_EMBARGO,
         "feature_subset": "all",
         "relabel": True,
@@ -112,8 +112,8 @@ ROBUSTNESS_SETTINGS: list[dict] = [
     {
         "name": "Wide Barriers",
         "horizon": config.TBM_HORIZON_BARS,
-        "pt":      2.0,
-        "sl":      1.5,
+        "pt":      7.0,
+        "sl":      7.0,
         "embargo_pct": config.CV_PCT_EMBARGO,
         "feature_subset": "all",
         "relabel": True,
